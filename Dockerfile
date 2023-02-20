@@ -5,6 +5,6 @@ RUN mkdir /etc/modbus/
 RUN apk add --no-cache git
 RUN apk add --no-cache openssh
 WORKDIR /etc/modbus/
-RUN git clone https://github.com/tienvinhle/IOTGateway/modbus /etc/modbus/
+RUN git clone https://github.com/tienvinhle/IOTGateway-modbus.git /etc/modbus/
 RUN pip install 'asyncio' 'pymodbus' 'aioredis==1.3.1'
 CMD ["python", "appConnectivity.py"]
