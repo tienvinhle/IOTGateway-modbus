@@ -5,5 +5,5 @@ RUN mkdir /etc/modbus/
 RUN apt install git
 WORKDIR /etc/modbus/
 RUN git clone https://github.com/tienvinhle/IOTGateway-modbus.git /etc/modbus/
-RUN pip install 'asyncio' 'pymodbus' 'aioredis==1.3.1'
+RUN pip install 'asyncio' 'pymodbus==1.3.2' 'aioredis==1.3.1'
 CMD ["python", "appConnectivity.py"]
