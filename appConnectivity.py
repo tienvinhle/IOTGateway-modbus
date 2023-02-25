@@ -24,21 +24,26 @@ def deviceInit(eventloop, sharedQueue):
 
 	print('Create devices ...')
 	conf = getConfig(configPath)
-	msgConf = conf.get("micro")
-	msg = Message(msgConf["ip"], msgConf["port"])
-	for (thingID, mbConf) in conf.get("modbustcp").items():
-		mbD.append(ModbusDevice(thingID, mbConf, sharedQueue, eventloop))		
-		print('Device was created: ', mbConf.get("ip"), mbConf.get("port"), mbConf.get("unitID"))
-	for d in mbD:
-		t = Thread(target=start_loop, args=[d])
-		t.daemon = True
-		t.start()
-	print('About to run loop in mainthread')
+	if conf is not None:
+		msgConf = conf.get("micro")
+		msg = Message(msgConf["ip"], msgConf["port"])
+		for (thingID, mbConf) in conf.get("modbustcp").items():
+			mbD.append(ModbusDevice(thingID, mbConf, sharedQueue, eventloop))
+			print('Device was created: ', mbConf.get("ip"), mbConf.get("port"), mbConf.get("unitID"))
+		for d in mbD:
+			t = Thread(target=start_loop, args=[d])
+			t.daemon = True
+			t.start()
+		print('About to run loop in mainthread')
 
 def getConfig(configPath):
-	with open(configPath, 'r') as f:
+	try:
+		with open(configPath, 'r') as f:
 			config = json.load(f, object_pairs_hook=OrderedDict)
-			return config
+	except ValueError:
+		config = None
+		print('No config file found or The file is invalid. Please check')
+	return config
 
 async def on_msg_queue(queue):
 	while True:
